@@ -1,5 +1,4 @@
 <button id="animateGraph">Trigger Animation</button>
-<button id="regeneratePoints">Regenerate Points</button>
 <svg height="700" width="1600" xmlns="http://www.w3.org/2000/svg">
 
 
@@ -63,13 +62,12 @@
         Ys[1] = [600, 250, 450, 400, 420, 380, 300, 200, 330, 360, 250, 270, 400, 300];
         Ys[2] = [600, 520, 300, 220, 500, 450, 250, 250, 230, 220, 200, 500, 100, 50];
         var inputs = 3, selectedInput = 0;
-
+        animateGraph(Ys[(selectedInput++)%inputs]);
         document.getElementById('animateGraph').onclick = () => {animateGraph(Ys[(selectedInput++)%inputs])};
-        document.getElementById('regeneratePoints').onclick = () => {swapPoints(document.getElementById('graph'), generatePathPoints(Ys))};
 
         document.querySelector('#graph animate').addEventListener('mySpecialEvent',function(){
           this.style.fill = 'green';
-          console.log('pula');
+          console.log('does not work');
         },false);
         document.querySelector('#graph animate').addEventListener('oanimationend animationend webkitAnimationEnd', function() {
           console.log('Animation finished');
@@ -79,11 +77,12 @@
         function animateGraph(points){
           var graph = document.getElementById('graph');
           var graphAnimation = graph.getElementsByTagName('animate')[0];
-          graphAnimation.setAttribute('to', 'M50 600 C' + generatePathPoints(points) + 'L 440 600 Z');
+          var newPoints = generatePathPoints(points);
+          graphAnimation.setAttribute('to', 'M50 600 C' + newPoints);
           graphAnimation.beginElement();
 
           setTimeout(function () {
-            graph.setAttribute('d', 'M50 600 C' + generatePathPoints(points) + 'L 440 600 Z');
+            graph.setAttribute('d', 'M50 600 C' + generatePathPoints(points));
           }, 1000);
         }
 
@@ -91,29 +90,33 @@
         function generatePathPoints(Ys){
           var points = generatePointsFromYs(Ys);
           var bezierPoints = calculateBezierPoints(points);
-          console.log(bezierPoints);
           points.pop();
           var graphPoints = createGraphPoints(points, bezierPoints);
 
           graphPoints = graphPoints.map(point => stringifyPoint(point) + ', ');
-          var allPointsString = ''
+          //graphPoints[graphPoints.length-1] = graphPoints[graphPoints.length-1].substring(0, graphPoints[graphPoints.length-1].length - 2);
+          var allPointsString = '';
           graphPoints.forEach(pointString => allPointsString += pointString);
+
+          allPointsString = allPointsString.substring(0, allPointsString.length-2);
+          allPointsString += ' L ' + bezierPoints[bezierPoints.length-1].x + ' 600' + ' Z';
+          console.log(allPointsString);
           return allPointsString;
 
           function generatePointsFromYs(ys){
             var points = [];
             var x=30;
             ys.forEach(y => {
-              points.push({x:x += 30, y:y});
-          });
+              points.push({x:x += 50, y:y});
+            });
 
             //console.log(points);
             return points
           }
 
           function calculateBezierPointsBetweenInterval(p1, p2){
-            var bez1 = {x: p1.x + 10, y:p2.y};//somehow it works better if both points have p2.y
-            var bez2 = {x: p1.x + 20, y:p2.y};
+            var bez1 = {x: p1.x + 20, y:p2.y};//somehow it works better if both points have p2.y
+            var bez2 = {x: p1.x + 40, y:p2.y};
 
             return [bez1, bez2];
           }
