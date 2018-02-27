@@ -1,3 +1,5 @@
+<!--suppress ALL -->
+
 <svg version="1.1" baseProfile="full"
      xmlns="http://www.w3.org/2000/svg"
      id="canvas" width="800" height="600" viewBox="0 0 800 600"
@@ -24,59 +26,6 @@
     </symbol>
 
 
-    <script>
-
-          // <![CDATA[
-          function mouseMove(evt){
-
-                // Get the mouse location:
-                var mousex = evt.clientX;
-                var mousey = evt.clientY;
-                var dx=mousex-8;
-                var dy=mousey-8;
-
-                document.getElementById('posX').textContent = 'X: ' + dx + 'px';
-                document.getElementById('posY').textContent = 'Y: ' + dy + 'px';
-
-                // var left=document.getElementById("LeftPupil");
-                // left.setAttributeNS(null, "cx", dx+105);
-                // left.setAttributeNS(null, "cy", dy+105);
-
-                // var mountain;
-                // for (var i = 1; i <= 3; i++){
-                //   mountain = document.getElementById("mountain" + i);
-                //   mountain.setAttributeNS(null, "fill", "red");
-                //
-                //   mountain = document.getElementById("mountain" + i + i);
-                //   mountain.setAttributeNS(null, "fill", "red");
-                // }
-
-                // document.getElementById('mountain1').setAttribute( 'transform','translate(' + dx + ',' + dy + ')' );
-                // document.getElementById('mountain1').setAttribute( 'points','300,600 100,210 200,600' );
-                // document.getElementById('mountain1').setAttribute( 'x', dx );
-                // document.getElementById('mountain1').setAttribute( 'y', dy );
-
-                document.getElementById('laser1').setAttribute( 'points','271,340 ' + dx + ',' + dy );
-                document.getElementById('laser2').setAttribute( 'points','271,345 ' + dx + ',' + dy );
-
-          }
-
-          function revert(evt){
-                document.getElementById('posX').textContent = 'X: -- px';
-                document.getElementById('posY').textContent = 'Y: -- px';
-
-                var mountain;
-                for (var i = 1; i <= 3; i++){
-                  mountain = document.getElementById("mountain" + i);
-                  mountain.setAttributeNS(null, "fill", "gray");
-
-                  mountain = document.getElementById("mountain" + i + i);
-                  mountain.setAttributeNS(null, "fill", "gray");
-                }
-          }
-
-      // ]]>
-    </script>
 
     <svg width="120" height="140">
         <!-- symbol definition  NEVER draw -->
@@ -160,16 +109,84 @@
 
         </symbol>
 
+
+
+        <image id="superman" href="superman.png" x="100" y="300" width="300" height="200" fill="black">
+            <animate id="animate-up" attributeName="y" from="20" to="0"
+                     begin="click" dur="500ms" repeatCount="1"></animate>
+            <!--<animate id="animate-down" attributeName="y" from='0' to="20"-->
+                     <!--begin="animate-up.end" dur="600ms" repeatCount="1"></animate>-->
+        </image>
         <polygon id="laser1" points="0,0 160,210" style="stroke:rgb(255,0,0);stroke-width:2" />
         <polygon id="laser2" points="0,0 160,210" style="stroke:rgb(255,0,0);stroke-width:2" />
 
-        <svg id="train" x="100" y="300" width="300" height="200">
-            <image href="superman.png" x="0" y="20" width="300" height="200" fill="black">
-                <animate attributeName="y" from="20" to="0"
-                         dur="500ms" repeatCount="indefinite"></animate>
-                <animate attributeName="y" from="0" to="20"
-                         dur="500ms" repeatCount="indefinite"></animate>
-            </image>
-        </svg>
+
+    <script>
+      var up=true;
+      setInterval(() => {
+        // document.getElementById('laser1').setAttribute('points', up?'271,340 ':'271,320 ' + dx + ',' + dy );
+        // document.getElementById('laser2').setAttribute('y', up?300:320);
+
+
+        var graphAnimation = document.getElementById('superman').getElementsByTagName('animate')[0];
+        graphAnimation.setAttribute('to', up?300:320);
+        graphAnimation.setAttribute('from', up?320:300);
+        graphAnimation.beginElement();
+
+        console.log(up + ' ' + document.getElementById('superman').getAttribute('y'));
+        up = !up;
+      },500);
+
+      // <![CDATA[
+      function mouseMove(evt){
+
+        // Get the mouse location:
+        var mousex = evt.clientX;
+        var mousey = evt.clientY;
+        var dx=mousex-8;
+        var dy=mousey-8;
+
+        document.getElementById('posX').textContent = 'X: ' + dx + 'px';
+        document.getElementById('posY').textContent = 'Y: ' + dy + 'px';
+
+        // var left=document.getElementById("LeftPupil");
+        // left.setAttributeNS(null, "cx", dx+105);
+        // left.setAttributeNS(null, "cy", dy+105);
+
+        // var mountain;
+        // for (var i = 1; i <= 3; i++){
+        //   mountain = document.getElementById("mountain" + i);
+        //   mountain.setAttributeNS(null, "fill", "red");
+        //
+        //   mountain = document.getElementById("mountain" + i + i);
+        //   mountain.setAttributeNS(null, "fill", "red");
+        // }
+
+        // document.getElementById('mountain1').setAttribute( 'transform','translate(' + dx + ',' + dy + ')' );
+        // document.getElementById('mountain1').setAttribute( 'points','300,600 100,210 200,600' );
+        // document.getElementById('mountain1').setAttribute( 'x', dx );
+        // document.getElementById('mountain1').setAttribute( 'y', dy );
+
+        document.getElementById('laser1').setAttribute( 'points','271,340 ' + dx + ',' + dy );
+        document.getElementById('laser2').setAttribute( 'points','271,345 ' + dx + ',' + dy );
+
+      }
+
+      function revert(evt){
+        document.getElementById('posX').textContent = 'X: -- px';
+        document.getElementById('posY').textContent = 'Y: -- px';
+
+        var mountain;
+        for (var i = 1; i <= 3; i++){
+          mountain = document.getElementById("mountain" + i);
+          mountain.setAttributeNS(null, "fill", "gray");
+
+          mountain = document.getElementById("mountain" + i + i);
+          mountain.setAttributeNS(null, "fill", "gray");
+        }
+      }
+
+      // ]]>
+    </script>
 
 </svg>
