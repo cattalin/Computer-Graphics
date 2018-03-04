@@ -1,27 +1,8 @@
+
 <button id="animateGraph">Trigger Animation</button>
-<svg height="700" width="1600" xmlns="http://www.w3.org/2000/svg">
-
-
-    <rect height="700" width="1600" fill="#747f6c"></rect>
-    <!--<path d="M50 600 L 70 60-->
-                       <!--90 450-->
-                       <!--110 400-->
-                       <!--130 420-->
-                       <!--150 380-->
-                       <!--170 300-->
-                       <!--190 480-->
-                       <!--210 330-->
-                       <!--230 360-->
-                       <!--250 250-->
-                       <!--270 270-->
-                       <!--290 270-->
-                       <!--310 150" fill="transparent" stroke="blue" stroke-width="3"/>-->
-
-    <!--<path d="M430 400 C 440 330, 445 300, 450 300-->
-                        <!--460 300, 465 340, 470 340-->
-                        <!--480 340, 485 340, 490 340" stroke="blue" stroke-width="3" fill="transparent"/>-->
-
-    <path id='graph' d="M50 600 C 60 600, 70 60, 80 60
+<svg id="canvas" height="700" width="1600" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="graph-item">
+        <path id="graph-path" d="M50 600 C 60 600, 70 60, 80 60
                        90 60, 100 450, 110 450
                        120 450, 130 400, 140 400
                        150 400, 160 420, 170 420
@@ -35,7 +16,7 @@
                        390 270, 400 270, 410 270
                        420 270, 430 150, 440 150
                      L 440 600 Z" stroke="#752796" stroke-width="3" fill="#c94cff">
-        <animate attributeName="d" to="M50 600 C 60 600, 70 60, 80 60
+            <animate id="graph-animation" attributeName="d" to="M50 600 C 60 600, 70 60, 80 60
                        90 60, 100 450, 110 450
                        120 450, 130 400, 140 400
                        150 400, 160 420, 170 420
@@ -48,15 +29,18 @@
                        360 250, 370 270, 380 270
                        390 270, 400 270, 410 270
                        420 270, 430 150, 440 150
-                     L 440 600 Z" dur="1000ms" repeatCount="1">
+                     L 440 600 Z" dur="500ms" repeatCount="1">
+            </animate>
+        </path>
+    </symbol>
 
-        </animate>
-    </path>
+    <use xlink:href="#graph-item"/>
 
 
 
+    <script type="text/javascript" type="text/ecmascript-6">//<!--so that the browser loads the javascript and webstorm recognizes es6-->
 
-    <script>
+        var canvas = document.getElementById('canvas');
         var Ys = [];
         Ys[0] = [600, 60,  450, 400, 420, 380, 300, 480, 330, 40,  250, 270, 100, 450];
         Ys[1] = [600, 250, 450, 400, 420, 380, 300, 200, 330, 360, 250, 270, 400, 300];
@@ -65,33 +49,71 @@
         animateGraph(Ys[(selectedInput++)%inputs]);
         document.getElementById('animateGraph').onclick = () => {animateGraph(Ys[(selectedInput++)%inputs])};
 
-        document.querySelector('#graph animate').addEventListener('mySpecialEvent',function(){
-          this.style.fill = 'green';
-          console.log('does not work');
-        },false);
-        document.querySelector('#graph animate').addEventListener('oanimationend animationend webkitAnimationEnd', function() {
-          console.log('Animation finished');
-        }, false);
-        console.log(document.querySelector('#graph animate'));
 
-        function animateGraph(points){
-          var graph = document.getElementById('graph');
+
+        // document.querySelector('#graph-path animate').addEventListener('mySpecialEvent',function(){
+        //   this.style.fill = 'green';
+        //   console.log('does not work');
+        // },false);
+        // document.querySelector('#graph-path animate').addEventListener('oanimationend animationend webkitAnimationEnd', function() {
+        //   console.log('Animation finished');
+        // }, false);
+        // console.log(document.querySelector('#graph-path animate'));
+
+        function animateGraph(Ys){
+          var graph = document.getElementById('graph-path');
           var graphAnimation = graph.getElementsByTagName('animate')[0];
-          var newPoints = generatePathPoints(points);
+          var graphPoints = generatePointsFromYs(Ys);
+          var newPoints = generatePathPoints(graphPoints);
           graphAnimation.setAttribute('to', 'M50 600 C' + newPoints);
           graphAnimation.beginElement();
 
           setTimeout(function () {
-            graph.setAttribute('d', 'M50 600 C' + generatePathPoints(points));
-          }, 1000);
+            removeGraphPoints();
+            graph.setAttribute('d', 'M50 600 C' + newPoints);
+            insertGraphPoints(graphPoints)
+          }, 499);
         }
 
 
-        function generatePathPoints(Ys){
-          var points = generatePointsFromYs(Ys);
-          var bezierPoints = calculateBezierPoints(points);
-          points.pop();
-          var graphPoints = createGraphPoints(points, bezierPoints);
+        function insertGraphPoints(graphPoints){
+          graphPoints.forEach(graphPoint => {
+            insertCircle(graphPoint.x - 10, graphPoint.y);
+          });
+        }
+
+        function removeGraphPoints(){
+          let circle;
+          while(circle = canvas.getElementById('graph-point')){
+            canvas.removeChild(circle);
+          }
+        }
+        function insertCircle(cx, cy){
+          var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+          circle.setAttribute('cx', cx);
+          circle.setAttribute('cy', cy);
+          circle.setAttribute('r' , 3);
+          circle.setAttribute('fill', 'red');
+          circle.setAttribute('id', 'graph-point');
+          canvas.appendChild(circle);
+        }
+
+        function generatePointsFromYs(ys){
+          var points = [];
+          var x=30;
+          ys.forEach(y => {
+            points.push({x:x += 50, y:y});
+          });
+
+          //console.log(points);
+          return points;
+        }
+
+
+        function generatePathPoints(graphPoints){
+          var bezierPoints = calculateBezierPoints(graphPoints);
+          graphPoints.pop();
+          var graphPoints = createGraphPoints(graphPoints, bezierPoints);
 
           graphPoints = graphPoints.map(point => stringifyPoint(point) + ', ');
           //graphPoints[graphPoints.length-1] = graphPoints[graphPoints.length-1].substring(0, graphPoints[graphPoints.length-1].length - 2);
@@ -103,17 +125,6 @@
           console.log(allPointsString);
           return allPointsString;
 
-          function generatePointsFromYs(ys){
-            var points = [];
-            var x=30;
-            ys.forEach(y => {
-              points.push({x:x += 50, y:y});
-            });
-
-            //console.log(points);
-            return points
-          }
-
           function calculateBezierPointsBetweenInterval(p1, p2){
             var bez1 = {x: p1.x + 20, y:p2.y};//somehow it works better if both points have p2.y
             var bez2 = {x: p1.x + 40, y:p2.y};
@@ -121,10 +132,10 @@
             return [bez1, bez2];
           }
 
-          function calculateBezierPoints(graphPoints){
+          function calculateBezierPoints(pathPoints){
             var bezierPairs = [];
-            for(let i=0; i <= graphPoints.length - 2; i++){
-              let bPoints = calculateBezierPointsBetweenInterval(graphPoints[i], graphPoints[i+1]);
+            for(let i=0; i <= pathPoints.length - 2; i++){
+              let bPoints = calculateBezierPointsBetweenInterval(pathPoints[i], pathPoints[i+1]);
               bezierPairs.push(bPoints[0]);
               bezierPairs.push(bPoints[1]);
             }
@@ -136,14 +147,12 @@
             var graphPoints = [];
             var bezIndex = 0;
             points.forEach(point => {
-              graphPoints.push(point);
-            graphPoints.push(bezierPoints[bezIndex]);
-            bezIndex++;
-            graphPoints.push(bezierPoints[bezIndex]);
-            bezIndex++;
-          });
-
-            //console.log(graphPoints);
+                graphPoints.push(point);
+                graphPoints.push(bezierPoints[bezIndex]);
+                bezIndex++;
+                graphPoints.push(bezierPoints[bezIndex]);
+                bezIndex++;
+            });
             return graphPoints;
           }
 
