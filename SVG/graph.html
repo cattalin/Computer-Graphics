@@ -64,21 +64,24 @@
           var graph = document.getElementById('graph-path');
           var graphAnimation = graph.getElementsByTagName('animate')[0];
           var graphPoints = generatePointsFromYs(Ys);
-          var newPoints = generatePathPoints(graphPoints);
+          var bezierPoints = calculateBezierPoints(graphPoints);
+          var newPoints = generatePathPoints(graphPoints, bezierPoints);
+          removeGraphPoints();
           graphAnimation.setAttribute('to', 'M50 600 C' + newPoints);
           graphAnimation.beginElement();
 
           setTimeout(function () {
             removeGraphPoints();
             graph.setAttribute('d', 'M50 600 C' + newPoints);
-            insertGraphPoints(graphPoints)
-          }, 499);
+            insertGraphPoints(graphPoints, 'red');
+            insertGraphPoints(bezierPoints, 'blue');
+          }, 497);
         }
 
 
-        function insertGraphPoints(graphPoints){
+        function insertGraphPoints(graphPoints, color){
           graphPoints.forEach(graphPoint => {
-            insertCircle(graphPoint.x - 10, graphPoint.y);
+            insertCircle(graphPoint.x, graphPoint.y, color);
           });
         }
 
@@ -88,72 +91,77 @@
             canvas.removeChild(circle);
           }
         }
-        function insertCircle(cx, cy){
+
+        function insertCircle(cx, cy, color){
           var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
           circle.setAttribute('cx', cx);
           circle.setAttribute('cy', cy);
           circle.setAttribute('r' , 3);
-          circle.setAttribute('fill', 'red');
+          circle.setAttribute('fill', color);
           circle.setAttribute('id', 'graph-point');
           canvas.appendChild(circle);
         }
 
         function generatePointsFromYs(ys){
           var points = [];
-          var x=30;
+          var x=0;
           ys.forEach(y => {
             points.push({x:x += 50, y:y});
           });
-
-          //console.log(points);
           return points;
         }
 
+        function calculateBezierPointsBetweenInterval(p1, p2){
+          var bez1 = {x: p2.x - 20, y:p2.y};//somehow it works better if both points have p2.y
+          var bez2 = {x: p2.x - 10, y:p2.y};
 
-        function generatePathPoints(graphPoints){
-          var bezierPoints = calculateBezierPoints(graphPoints);
-          graphPoints.pop();
-          var graphPoints = createGraphPoints(graphPoints, bezierPoints);
+          return [bez1, bez2];
+        }
 
-          graphPoints = graphPoints.map(point => stringifyPoint(point) + ', ');
+        function calculateBezierPoints(pathPoints){
+          var bezierPairs = [];
+          for(let i=0; i <= pathPoints.length - 2; i++){
+            let bPoints = calculateBezierPointsBetweenInterval(pathPoints[i], pathPoints[i+1]);
+            bezierPairs.push(bPoints[0]);
+            bezierPairs.push(bPoints[1]);
+          }
+          //console.log(bezierPairs);
+          return bezierPairs;
+        }
+
+        function generatePathPoints(graphPoints, bezierPoints){
+          console.log(graphPoints);
+          graphPoints.shift();
+          console.log(graphPoints);
+          // graphPoints.pop();
+          // console.log(graphPoints);
+          var pathPoints = mergePathPoints(graphPoints, bezierPoints);
+
+          pathPoints = pathPoints.map(point => stringifyPoint(point) + ', ');
           //graphPoints[graphPoints.length-1] = graphPoints[graphPoints.length-1].substring(0, graphPoints[graphPoints.length-1].length - 2);
           var allPointsString = '';
-          graphPoints.forEach(pointString => allPointsString += pointString);
+          pathPoints.forEach(pointString => allPointsString += pointString);
 
           allPointsString = allPointsString.substring(0, allPointsString.length-2);
           allPointsString += ' L ' + bezierPoints[bezierPoints.length-1].x + ' 600' + ' Z';
           console.log(allPointsString);
           return allPointsString;
 
-          function calculateBezierPointsBetweenInterval(p1, p2){
-            var bez1 = {x: p1.x + 20, y:p2.y};//somehow it works better if both points have p2.y
-            var bez2 = {x: p1.x + 40, y:p2.y};
 
-            return [bez1, bez2];
-          }
 
-          function calculateBezierPoints(pathPoints){
-            var bezierPairs = [];
-            for(let i=0; i <= pathPoints.length - 2; i++){
-              let bPoints = calculateBezierPointsBetweenInterval(pathPoints[i], pathPoints[i+1]);
-              bezierPairs.push(bPoints[0]);
-              bezierPairs.push(bPoints[1]);
-            }
-            //console.log(bezierPairs);
-            return bezierPairs;
-          }
 
-          function createGraphPoints(points, bezierPoints){
-            var graphPoints = [];
+          function mergePathPoints(graphPoints, bezierPoints){
+            var pathPoints = [];
             var bezIndex = 0;
-            points.forEach(point => {
-                graphPoints.push(point);
-                graphPoints.push(bezierPoints[bezIndex]);
+            graphPoints.forEach(point => {
+
+                pathPoints.push(bezierPoints[bezIndex]);
                 bezIndex++;
-                graphPoints.push(bezierPoints[bezIndex]);
+                pathPoints.push(bezierPoints[bezIndex]);
                 bezIndex++;
+              pathPoints.push(point);
             });
-            return graphPoints;
+            return pathPoints;
           }
 
           function stringifyPoint(point){
