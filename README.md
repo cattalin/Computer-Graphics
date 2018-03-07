@@ -34,7 +34,24 @@ Also the resulting coordinates are printed inside two <text> fields
 
 
 
-2. The Graph example generates with javascript all the points of a <path/> element, in order to get a rounded graphic that animates between changing it's data. The input is the array of Y's.
+2. The Graph example generates with javascript all the points of a <path/> element, in order to get a rounded graphic that animates between changing it's data.
+
+The generating javascript algorithm works as follows:
+1. It receives an array of Y positions, as an input.
+2. It generates all the SVG points from those Ys and stores them as graphPoints.
+3. It generates all the bezier points(in this case quadratic Beziers) between all the graphPoints.
+4. It merges the graphPoints and bezierPoints into an pathPoints array.
+5. It stringifies and merges the points in the pathPoints array and then changes the "d" attribute of the path(after animating it).
+6. Adds circles on the graphPoints and lines between any bezierPoint and it's adjacent graphPoints, so that it shows how the graph was constructed.
+
+The power of this algorithm is the simplicity of changing how the graph looks like, by adjusting the bezier points calculation rule:
+function calculateBezierPointsBetweenInterval(p1, p2){
+  var bez1 = {};
+  bez1.x = p2.x + (p1.y>p2.y? -40: 10);
+  bez1.y=  p2.y + (p1.y>p2.y? 1: -1)*((30*Math.abs(p1.y-p2.y))/100);
+  return [bez1];
+}
+The idea here is that, both x and y adjust based on whether the graph is increasing or decreasing, and the y is also adjusted by 30% of the Y absolute difference between points, so that the quadratic bezier point is well placed between p1 and p2 even if the difference is very small or very big.
 
 
 
