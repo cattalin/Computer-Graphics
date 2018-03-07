@@ -90,29 +90,13 @@
     <use href="#cloud-item" transform="translate(100 0)"></use>
 
 
+
+
+
+
     <symbol id="mountain-item">
         <polygon id="mountain-poly" points="0,600 100,210 200,600" fill="gray" stroke="aqua" stroke-width="1" >
-            <!--<animate attributeName="points" from="0,600 100,210 200,600" to="-200,600 -100,250 0,600"-->
-                     <!--dur="4" repeatCount="indefinite"></animate>-->
         </polygon>
-    </symbol>
-
-    <symbol id="background-second-half" width="800" height="600">
-        <polygon points="800,600 900,210 1000,600" fill="gray" stroke="lime" stroke-width="1" >
-            <animate attributeName="points" from="800,600 900,210 1000,600" to="0,600 100,210 200,600"
-                     dur="4" repeatCount="indefinite"></animate>
-        </polygon>
-
-        <polygon points="900,600 1000,300 1100,600" fill="gray" stroke="lime" stroke-width="1" >
-            <animate attributeName="points" from="900,600 1000,300 1100,600" to="100,600 200,300 300,600"
-                     dur="4" repeatCount="indefinite"></animate>
-        </polygon>
-
-        <polygon points="1100,600 1200,150 1300,600" fill="gray" stroke="lime" stroke-width="1" >
-            <animate attributeName="points" from="1100,600 1200,150 1300,600" to="300,600 400,150 500,600"
-                     dur="4" repeatCount="indefinite"></animate>
-        </polygon>
-
     </symbol>
 
 
@@ -256,7 +240,7 @@
                  begin="click" dur="500ms" repeatCount="1"></animate>
     </image>
     <polygon id="laser1" points="0,0 160,210" style="stroke:rgb(255,0,0);stroke-width:2" />
-    <polygon id="laser2" points="0,0 160,210" style="stroke:rgb(255,0,0);stroke-width:2" />
+    <line id="laser2" x1="271" y1="345" x2="0" y2="0" style="stroke:rgb(255,0,0);stroke-width:2" />
 
     <use href="#fast-mountains-item" transform="translate(-100 50)"/>
 
@@ -287,8 +271,8 @@
         document.getElementById('posY').textContent = 'Y: ' + mousePosition.y + 'px';
 
         document.getElementById('laser1').setAttribute( 'points','271,340 ' + mousePosition.x + ',' + mousePosition.y );
-        document.getElementById('laser2').setAttribute( 'points','271,345 ' + mousePosition.x + ',' + mousePosition.y );
-
+        document.getElementById('laser2').setAttribute( 'x2',mousePosition.x);
+        document.getElementById('laser2').setAttribute( 'y2',mousePosition.y);
       }
       var pt = canvas.createSVGPoint();
       function cursorPoint(evt){
@@ -299,15 +283,6 @@
       function revert(evt){
         document.getElementById('posX').textContent = 'X: -- px';
         document.getElementById('posY').textContent = 'Y: -- px';
-
-        // var mountain;
-        // for (var i = 1; i <= 3; i++){
-        //   mountain = document.getElementById('background1').getElementById("mountain" + i);
-        //   mountain.setAttributeNS(null, "fill", "gray");
-        //
-        //   mountain = document.getElementById("mountain" + i + i);
-        //   mountain.setAttributeNS(null, "fill", "gray");
-        // }
       }
     </script>
 

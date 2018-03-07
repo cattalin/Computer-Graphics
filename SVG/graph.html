@@ -1,5 +1,6 @@
 
 <button id="animateGraph">Trigger Animation</button>
+<button id="animateGraph">Show Lines</button>
 <svg id="canvas" height="700" width="1600" xmlns="http://www.w3.org/2000/svg">
     <symbol id="graph-item">
         <path id="graph-path" d="M50 600 C 60 600, 70 60, 80 60
@@ -67,18 +68,27 @@
           var bezierPoints = calculateBezierPoints(graphPoints);
           var newPoints = generatePathPoints(graphPoints, bezierPoints);
           removeGraphPoints();
-          graphAnimation.setAttribute('to', 'M50 600 C' + newPoints);
+          removeGraphLines();
+          graphAnimation.setAttribute('to', 'M50 600 Q' + newPoints);//TODO change Q with C for cubic
           graphAnimation.beginElement();
 
           setTimeout(function () {
             removeGraphPoints();
-            graph.setAttribute('d', 'M50 600 C' + newPoints);
+            graph.setAttribute('d', 'M50 600 Q' + newPoints);
             insertGraphPoints(graphPoints, 'red');
             insertGraphPoints(bezierPoints, 'blue');
-          }, 497);
+            insertLines(graphPoints, bezierPoints, 'black');
+          }, 490);
         }
 
 
+        function insertLines(graphPoints, bezierPoints, color){
+          bezierPoints.forEach((bezPoint,index) => {
+            insertLine(bezPoint, graphPoints[index], color);
+            index>0?insertLine(bezPoint, graphPoints[index-1], color):null;
+          })
+
+        }
         function insertGraphPoints(graphPoints, color){
           graphPoints.forEach(graphPoint => {
             insertCircle(graphPoint.x, graphPoint.y, color);
@@ -92,6 +102,13 @@
           }
         }
 
+        function removeGraphLines(){
+          let line;
+          while(line = canvas.getElementById('graph-line')){
+            canvas.removeChild(line);
+          }
+        }
+
         function insertCircle(cx, cy, color){
           var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
           circle.setAttribute('cx', cx);
@@ -100,6 +117,16 @@
           circle.setAttribute('fill', color);
           circle.setAttribute('id', 'graph-point');
           canvas.appendChild(circle);
+        }
+        function insertLine(p1, p2, color){
+          var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+          line.setAttribute('x1', p1.x);
+          line.setAttribute('y1', p1.y);
+          line.setAttribute('x2', p2.x);
+          line.setAttribute('y2', p2.y);
+          line.setAttribute('style',"stroke:"+color+";stroke-width:2");
+          line.setAttribute('id', 'graph-line');
+          canvas.appendChild(line);
         }
 
         function generatePointsFromYs(ys){
@@ -111,34 +138,37 @@
           return points;
         }
 
-        function calculateBezierPointsBetweenInterval(p1, p2){
-          var bez1 = {x: p2.x - 20, y:p2.y};//somehow it works better if both points have p2.y
-          var bez2 = {x: p2.x - 10, y:p2.y};
+        function calculateQuadraticBezierPointsBetweenInterval(p1, p2){
+              var bez1 = {};
+              bez1.x = p2.x + (p1.y>p2.y? -40: 10);
+              bez1.y=  p2.y + (p1.y>p2.y? 1: -1)*((30*Math.abs(p1.y-p2.y))/100);
+              return [bez1];
+        }
 
-          return [bez1, bez2];
+        function calculateCubicBezierPointsBetweenInterval(p1, p2){
+          var bez1 = {};
+          bez1.x = p2.x + (p1.y>p2.y? -40: 10);
+          bez1.y=  p2.y + (p1.y>p2.y? 1: -1)*((30*Math.abs(p1.y-p2.y))/100);
+          return [bez1];
         }
 
         function calculateBezierPoints(pathPoints){
           var bezierPairs = [];
           for(let i=0; i <= pathPoints.length - 2; i++){
-            let bPoints = calculateBezierPointsBetweenInterval(pathPoints[i], pathPoints[i+1]);
-            bezierPairs.push(bPoints[0]);
-            bezierPairs.push(bPoints[1]);
+            let bPoints = calculateQuadraticBezierPointsBetweenInterval(pathPoints[i], pathPoints[i+1]);
+            bPoints.forEach(bPoint => bezierPairs.push(bPoint));
           }
-          //console.log(bezierPairs);
           return bezierPairs;
         }
 
         function generatePathPoints(graphPoints, bezierPoints){
-          console.log(graphPoints);
           graphPoints.shift();
-          console.log(graphPoints);
-          // graphPoints.pop();
-          // console.log(graphPoints);
+
           var pathPoints = mergePathPoints(graphPoints, bezierPoints);
+          console.log(pathPoints);
 
           pathPoints = pathPoints.map(point => stringifyPoint(point) + ', ');
-          //graphPoints[graphPoints.length-1] = graphPoints[graphPoints.length-1].substring(0, graphPoints[graphPoints.length-1].length - 2);
+
           var allPointsString = '';
           pathPoints.forEach(pointString => allPointsString += pointString);
 
@@ -157,8 +187,8 @@
 
                 pathPoints.push(bezierPoints[bezIndex]);
                 bezIndex++;
-                pathPoints.push(bezierPoints[bezIndex]);
-                bezIndex++;
+                // pathPoints.push(bezierPoints[bezIndex]);//TODO add this for cubic
+                // bezIndex++;
               pathPoints.push(point);
             });
             return pathPoints;
