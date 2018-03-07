@@ -9,17 +9,22 @@ In the SVG folder you will find a few examples that implement vectorial graphics
 The point behind this animation is to show a way to animate a background using animateTransform tags and translation, but also to show a javascript user interaction.
 
 The background is created using multiple "mountain-item" symbols defined as follows:
-  <symbol id="mountain-item">
+``` 
+ <symbol id="mountain-item">
       <polygon id="mountain-poly" points="0,600 100,210 200,600" fill="gray" stroke="aqua" stroke-width="1" >
       </polygon>
   </symbol>
+```
 Those symbols are then multiplied using the <use href="symbol-name"/> tag but translated to different positions on screen using an animateTransform for each one of them.
+``` 
 <animateTransform
   attributeName="transform" type="translate"
   values="400 50; -400 50"
   additive="sum"
   dur="3s"
 repeatCount="indefinite" />
+```
+
 This allows the used symbol to start with all it's coordinates offseted by 400 pixels on the X axis and 50 on the Y(what their positions were + the offset). This way the triangle goes out of the screen and seems smaller, although the better way to do this, would have been using the transform="scale(scale_factor)" property.
 By using this symbols and translations system, I was able to create multiple instances with different properties of the mountain symbol, in order to simulate some smaller, faster moving ones, or even ones moving in front of the character.
 Also by chaining multiple points in the values property, the animations are chained. We can also tune the duration of the animation, it's type(the other ones being scale and rotate) and also the additive operation when applying the offset.
@@ -45,12 +50,14 @@ The generating javascript algorithm works as follows:
 6. Adds circles on the graphPoints and lines between any bezierPoint and it's adjacent graphPoints, so that it shows how the graph was constructed.
 
 The power of this algorithm is the simplicity of changing how the graph looks like, by adjusting the bezier points calculation rule:
+```
 function calculateBezierPointsBetweenInterval(p1, p2){
   var bez1 = {};
   bez1.x = p2.x + (p1.y>p2.y? -40: 10);
   bez1.y=  p2.y + (p1.y>p2.y? 1: -1)*((30*Math.abs(p1.y-p2.y))/100);
   return [bez1];
 }
+```
 The idea here is that, both x and y adjust based on whether the graph is increasing or decreasing, and the y is also adjusted by 30% of the Y absolute difference between points, so that the quadratic bezier point is well placed between p1 and p2 even if the difference is very small or very big.
 
 
