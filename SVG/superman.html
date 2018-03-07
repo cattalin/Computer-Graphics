@@ -7,87 +7,87 @@
      onmousemove="mouseMove(evt)"
      onmouseout="revert(evt)">
 
-    <rect width="100%" fill="87cefa"></rect>
-    <defs>
-        <rect id="def-rect"
-              x="-25" y="-25"
-              width="50" height="50"
-              fill="#29e">
-        </rect>
-    </defs>
+    <!--<rect width="100%" fill="87cefa"></rect>-->
+    <!--<defs>-->
+        <!--<rect id="def-rect"-->
+              <!--x="-25" y="-25"-->
+              <!--width="50" height="50"-->
+              <!--fill="#29e">-->
+        <!--</rect>-->
+    <!--</defs>-->
 
-    <!-- reference resourses by ID in xlink:href attribute -->
-    <use xlink:href="#def-rect" transform="translate(100 50)">
-        <!--<animate attributeName="transform" to="translate(300 150)" dur="500ms" repeatCount="indefinite"></animate>-->
-        <animateTransform
-                attributeName="transform" type="translate"
-                values="0 0; 200 50; 0 0"
-                additive="sum"
-                dur="3s"
-                repeatCount="indefinite" />
-        <animateTransform
-                attributeName="transform" type="rotate"
-                values="360 0 0; 0 0 360; 360 0 0"
-                additive="sum"
-                dur="3s"
-                repeatCount="indefinite" />
-        <animateTransform
-                attributeName="transform" type="scale"
-                values="0.5; 1.5; 0.5"
-                additive="sum"
-                dur="3s"
-                repeatCount="indefinite" />
-    </use>
-    <use xlink:href="#def-rect" transform="translate(200 50)"/>
-    <use xlink:href="#def-rect" transform="translate(300 50)"/>
+    <!--&lt;!&ndash; reference resourses by ID in xlink:href attribute &ndash;&gt;-->
+    <!--<use xlink:href="#def-rect" transform="translate(100 50)">-->
+        <!--&lt;!&ndash;<animate attributeName="transform" to="translate(300 150)" dur="500ms" repeatCount="indefinite"></animate>&ndash;&gt;-->
+        <!--<animateTransform-->
+                <!--attributeName="transform" type="translate"-->
+                <!--values="0 0; 200 50; 0 0"-->
+                <!--additive="sum"-->
+                <!--dur="3s"-->
+                <!--repeatCount="indefinite" />-->
+        <!--<animateTransform-->
+                <!--attributeName="transform" type="rotate"-->
+                <!--values="360 0 0; 0 0 360; 360 0 0"-->
+                <!--additive="sum"-->
+                <!--dur="3s"-->
+                <!--repeatCount="indefinite" />-->
+        <!--<animateTransform-->
+                <!--attributeName="transform" type="scale"-->
+                <!--values="0.5; 1.5; 0.5"-->
+                <!--additive="sum"-->
+                <!--dur="3s"-->
+                <!--repeatCount="indefinite" />-->
+    <!--</use>-->
+    <!--<use xlink:href="#def-rect" transform="translate(200 50)"/>-->
+    <!--<use xlink:href="#def-rect" transform="translate(300 50)"/>-->
 
 
-    <symbol id="pointed-bezier-curve-item">
-        <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80, 250 10, 275 80" stroke="black" fill="transparent"/>
-        <circle cx="10" cy="80" r="2" fill="red"></circle>
-        <circle cx="40" cy="10" r="2" fill="red"></circle>
-        <circle cx="65" cy="10" r="2" fill="red"></circle>
-        <circle cx="95" cy="80" r="2" fill="red"></circle>
+    <!--<symbol id="pointed-bezier-curve-item">-->
+        <!--<path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80, 250 10, 275 80" stroke="black" fill="transparent"/>-->
+        <!--<circle cx="10" cy="80" r="2" fill="red"></circle>-->
+        <!--<circle cx="40" cy="10" r="2" fill="red"></circle>-->
+        <!--<circle cx="65" cy="10" r="2" fill="red"></circle>-->
+        <!--<circle cx="95" cy="80" r="2" fill="red"></circle>-->
 
-        <circle cx="150" cy="150" r="2" fill="red"></circle>
-        <circle cx="180" cy="80" r="2" fill="red"></circle>
-        <circle cx="250" cy="10" r="2" fill="red"></circle>
-        <circle cx="275" cy="80" r="2" fill="red"></circle>
-    </symbol>
+        <!--<circle cx="150" cy="150" r="2" fill="red"></circle>-->
+        <!--<circle cx="180" cy="80" r="2" fill="red"></circle>-->
+        <!--<circle cx="250" cy="10" r="2" fill="red"></circle>-->
+        <!--<circle cx="275" cy="80" r="2" fill="red"></circle>-->
+    <!--</symbol>-->
+
+    <!--&lt;!&ndash;<symbol id="cloud-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<path d="M10 180 C 10 150, 35 110, 65 110,&ndash;&gt;-->
+                           <!--&lt;!&ndash;100 110, 130 70, 130 40" stroke="black" fill="transparent"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="10" cy="180" r="2" fill="red"></circle>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="10" cy="150" r="2" fill="red"></circle>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="35" cy="110" r="2" fill="red"></circle>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="65" cy="110" r="2" fill="red"></circle>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<circle cx="100" cy="110" r="2" fill="red"></circle>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="130" cy="70" r="2" fill="red"></circle>&ndash;&gt;-->
+        <!--&lt;!&ndash;<circle cx="130" cy="40" r="2" fill="red"></circle>&ndash;&gt;-->
+    <!--&lt;!&ndash;</symbol>&ndash;&gt;-->
 
     <!--<symbol id="cloud-item">-->
-        <!--<path d="M10 180 C 10 150, 35 110, 65 110,-->
-                           <!--100 110, 130 70, 130 40" stroke="black" fill="transparent"/>-->
+        <!--<path d="M10 150 C 30 110, 50 110, 70 150,-->
+                           <!--100 90, 130 90, 150 150-->
+                           <!--170 110, 190 110, 210 150-->
+
+                           <!--190 220, 170 220, 150 180-->
+                           <!--130 240, 100 240, 70 200-->
+                           <!--50 220, 30 220, 10 180" stroke="black" fill="transparent"/>-->
+
+
         <!--<circle cx="10" cy="180" r="2" fill="red"></circle>-->
         <!--<circle cx="10" cy="150" r="2" fill="red"></circle>-->
         <!--<circle cx="35" cy="110" r="2" fill="red"></circle>-->
         <!--<circle cx="65" cy="110" r="2" fill="red"></circle>-->
 
-        <!--<circle cx="100" cy="110" r="2" fill="red"></circle>-->
-        <!--<circle cx="130" cy="70" r="2" fill="red"></circle>-->
-        <!--<circle cx="130" cy="40" r="2" fill="red"></circle>-->
     <!--</symbol>-->
 
-    <symbol id="cloud-item">
-        <path d="M10 150 C 30 110, 50 110, 70 150,
-                           100 90, 130 90, 150 150
-                           170 110, 190 110, 210 150
+    <!--<use href="#pointed-bezier-curve-item" transform="translate(300 100)"></use>-->
 
-                           190 220, 170 220, 150 180
-                           130 240, 100 240, 70 200
-                           50 220, 30 220, 10 180" stroke="black" fill="transparent"/>
-
-
-        <circle cx="10" cy="180" r="2" fill="red"></circle>
-        <circle cx="10" cy="150" r="2" fill="red"></circle>
-        <circle cx="35" cy="110" r="2" fill="red"></circle>
-        <circle cx="65" cy="110" r="2" fill="red"></circle>
-
-    </symbol>
-
-    <use href="#pointed-bezier-curve-item" transform="translate(300 100)"></use>
-
-    <use href="#cloud-item" transform="translate(100 0)"></use>
+    <!--<use href="#cloud-item" transform="translate(100 0)"></use>-->
 
 
 

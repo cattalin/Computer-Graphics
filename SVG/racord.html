@@ -1,0 +1,25 @@
+
+<svg id="canvas" height="700" width="1600" xmlns="http://www.w3.org/2000/svg">
+
+    <path id="graph-path" transform="translate(500 300) scale(3)" d="M0 0 C
+2	0
+7	1
+14	4" stroke="blue" stroke-width="1" fill="aqua">
+
+    </path>
+        <symbol id="pointed-bezier-curve-item">
+            <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80, 250 10, 275 80" stroke="black" fill="transparent"/>
+            <circle cx="10" cy="80" r="2" fill="red"></circle>
+            <circle cx="40" cy="10" r="2" fill="red"></circle>
+            <circle cx="65" cy="10" r="2" fill="red"></circle>
+            <circle cx="95" cy="80" r="2" fill="red"></circle>
+
+            <circle cx="150" cy="150" r="2" fill="red"></circle>
+            <circle cx="180" cy="80" r="2" fill="red"></circle>
+            <circle cx="250" cy="10" r="2" fill="red"></circle>
+            <circle cx="275" cy="80" r="2" fill="red"></circle>
+        </symbol>
+
+    <use href="#pointed-bezier-curve-item" transform="translate(300 100)"></use>
+</svg>
+

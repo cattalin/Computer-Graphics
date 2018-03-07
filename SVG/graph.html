@@ -140,8 +140,8 @@
 
         function calculateQuadraticBezierPointsBetweenInterval(p1, p2){
               var bez1 = {};
-              bez1.x = p2.x + (p1.y>p2.y? -40: 10);
-              bez1.y=  p2.y + (p1.y>p2.y? 1: -1)*((30*Math.abs(p1.y-p2.y))/100);
+              bez1.x = (p1.x + p2.x)/2;
+              bez1.y=  (p1.y + p2.y)/2;
               return [bez1];
         }
 
